@@ -368,10 +368,10 @@ class PGoApi:
         while True:
             self.heartbeat()
             sleep(1) # If you want to make it faster, delete this line... would not recommend though
-            self.spin_near_fort()
             while self.catch_near_pokemon():
                 sleep(4) # If you want to make it faster, delete this line... would not recommend though
                 pass
+            self.spin_near_fort()
 
     @staticmethod
     def flatmap(f, items):
