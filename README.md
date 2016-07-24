@@ -25,3 +25,4 @@ Niantic may ban you if you run the bot while signed in through your phone.
 
 ## TODO
 1. If your pokebox is full, then the bot won't do anything as of right now; I can do something about this later. Just transfer some pokemon manually for now. But with the bot, if you start off with like 100 pokemon, it will take quite some time to fill up, since it transfers pokemon that don't make the cutoffs that are set in config.json
+2. Throw the type of ball based on the color of the circle of the pokemon
