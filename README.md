@@ -23,5 +23,5 @@ Niantic may ban you if you run the bot while signed in through your phone.
 8. Many thanks to Tejado, Milaly, and the other wonderful devs that worked on this project!
 
 
-## Current Problems
-+ If your pokebox is full, then the bot won't do anything as of right now; I can do something about this later. Just transfer some pokemon manually for now. But with the bot, if you start off with like 100 pokemon, it will take quite some time to fill up, since it transfers pokemon that don't make the cutoffs that are set in config.json
+## TODO
+1. If your pokebox is full, then the bot won't do anything as of right now; I can do something about this later. Just transfer some pokemon manually for now. But with the bot, if you start off with like 100 pokemon, it will take quite some time to fill up, since it transfers pokemon that don't make the cutoffs that are set in config.json
