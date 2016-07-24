@@ -5,6 +5,10 @@
 Niantic may ban you if you run the bot while signed in through your phone.
 
 
+## Important Announcement
+If your bot stops working all of a sudden and doesn't move, input your latitude and longitude manually in pokebot.py. This happened because there is a limit to how many calls you can make for the API. Also, I won't be able to respond to all issues asap, due to the busy schedule ahead of me. I may go back to this project in a week or two. Cheers!
+
+
 ## Changes and updates
 1. Now you can hatch and incubate eggs. In order to do this, change step size in the config.json file to like 1 or 2 or something like that. Step size corresponds to the meters traveled per server call.
 2. Terminal/CMD output is so much more cleaner
