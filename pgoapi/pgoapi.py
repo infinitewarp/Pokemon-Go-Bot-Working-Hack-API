@@ -139,9 +139,15 @@ class PGoApi:
 
         if 'GET_PLAYER' in res['responses']:
             player_data = res['responses'].get('GET_PLAYER', {}).get('player_data', {})
+            with open("accounts/%s.json" % self.config['username'], "r") as f:
+                file = f.read()
+                json_file = json.loads(file)
+            inventory_items = json_file.get('GET_INVENTORY', {}).get('inventory_delta', {}).get('inventory_items', [])
+            inventory_items_dict_list = map(lambda x: x.get('inventory_item_data', {}), inventory_items)
+            player_stats = filter(lambda x: 'player_stats' in x, inventory_items_dict_list)[0].get('player_stats', {})
             currencies = player_data.get('currencies', [])
             currency_data = ",".join(map(lambda x: "{0}: {1}".format(x.get('name', 'NA'), x.get('amount', 'NA')), currencies))
-            self.log.info("Username: %s, Currencies: %s", player_data.get('username', 'NA'), currency_data)
+            self.log.info("Username: %s, Lvl: %s, XP: %s/%s, Currencies: %s", player_data.get('username', 'NA'), player_stats.get('level', 'NA'), player_stats.get('experience', 'NA'), player_stats.get('next_level_xp', 'NA'), currency_data)
 
         if 'GET_INVENTORY' in res['responses']:
             with open("accounts/%s.json" % self.config['username'], "w") as f:
@@ -207,7 +213,7 @@ class PGoApi:
         position = self.get_position()
         neighbors = getNeighbors(self._posf)
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0]*len(neighbors), cell_id=neighbors).call()
-    
+
     def attempt_catch(self,encounter_id,spawn_point_guid): #Problem here... add 4 if you have master ball
         for i in range(1,3): # Range 1...4 iff you have master ball `range(1,4)`
             r = self.catch_pokemon(
