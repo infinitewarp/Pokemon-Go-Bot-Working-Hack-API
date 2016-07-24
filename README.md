@@ -2,10 +2,10 @@
 ## USE WITH CAUTION! 
 Niantic may ban you if you run the bot while signed in through your phone.
 ## Changes and updates
-+ Now you can hatch and incubate eggs. In order to do this, change step size in the config.json file to like 1 or 2 or something like that. Step size corresponds to the meters traveled per server call.
-+ Terminal/CMD output is so much more cleaner
-+ Pokemon and transfered and you can get their candy
-+ Easier and faster to level up and catch rare pokemon
+1. Now you can hatch and incubate eggs. In order to do this, change step size in the config.json file to like 1 or 2 or something like that. Step size corresponds to the meters traveled per server call.
+2. Terminal/CMD output is so much more cleaner
+3. Pokemon and transfered and you can get their candy
+4. Easier and faster to level up and catch rare pokemon
 ## Instructions
 1. Download or fork project and open up zip file.
 2. Open up CMD/Terminal and change directory to that folder; for example, if I saved it the file in my desktop, I would `cd Desktop` and then `cd Pokemon-Go-Bot-Working-Hack-API-master`
