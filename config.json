@@ -8,6 +8,8 @@
         "GMAPS_API_KEY": "INSERT_API_KEY_HERE",
         "MIN_KEEP_IV" : 50,
         "KEEP_CP_OVER": 500,
+        "RELEASE_DUPLICATE": false,
+        "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100
     },
     {  "auth_service": "ptc",
@@ -18,6 +20,8 @@
         "GMAPS_API_KEY": "INSERT_API_KEY_HERE",
         "MIN_KEEP_IV" : 50,
         "KEEP_CP_OVER": 200,
+        "RELEASE_DUPLICATE": false,
+        "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100
     }
     ]}
