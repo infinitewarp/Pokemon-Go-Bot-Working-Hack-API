@@ -43,17 +43,15 @@ class PGoApi:
 
     API_ENTRY = 'https://pgorelease.nianticlabs.com/plfe/rpc'
 
-    def __init__(self, config, pokemon_names):
+    def __init__(self, config, pokemon_names, start_pos):
 
         self.log = logging.getLogger(__name__)
-
+        self._start_pos = start_pos
+        self._walk_count = 1
         self._auth_provider = None
         self._api_endpoint = None
         self.config = config
-        self._position_lat = 0
-        self._position_lng = 0
-        self._position_alt = 0
-        self._posf = (0,0,0)
+        self.set_position(*start_pos)
         self.MIN_KEEP_IV = config.get("MIN_KEEP_IV", 0)
         self.KEEP_CP_OVER = config.get("KEEP_CP_OVER", 0)
         self.RELEASE_DUPLICATES = config.get("RELEASE_DUPLICATE", 0)
@@ -155,7 +153,9 @@ class PGoApi:
 
         self._heartbeat_number += 1
         return res
+
     def walk_to(self,loc):
+        self._walk_count += 1
         steps = get_route(self._posf, loc, self.config.get("USE_GOOGLE", False), self.config.get("GMAPS_API_KEY", ""))
         for step in steps:
             for i,next_point in enumerate(get_increments(self._posf,step,self.config.get("STEP_SIZE", 200))):
@@ -171,9 +171,14 @@ class PGoApi:
     def spin_near_fort(self):
         map_cells = self.nearby_map_objects()['responses']['GET_MAP_OBJECTS']['map_cells']
         forts = PGoApi.flatmap(lambda c: c.get('forts', []), map_cells)
-        destinations = filtered_forts(self._posf,forts)
+        if self._start_pos and self._walk_count % self.config.get("RETURN_START_INTERVAL") == 0:
+            destinations = filtered_forts(self._start_pos, forts)
+        else:
+            destinations = filtered_forts(self._posf,forts)
+
         if destinations:
-            fort = destinations[0]
+            destinationNum = random.randint(0, min(5, len(destinations) - 1))
+            fort = destinations[destinationNum]
             self.log.info("Walking to fort at %s,%s", fort['latitude'], fort['longitude'])
             self.walk_to((fort['latitude'], fort['longitude']))
             position = self._posf # FIXME ?
@@ -209,7 +214,7 @@ class PGoApi:
         position = self.get_position()
         neighbors = getNeighbors(self._posf)
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0]*len(neighbors), cell_id=neighbors).call()
-    
+
     def attempt_catch(self,encounter_id,spawn_point_guid): #Problem here... add 4 if you have master ball
         for i in range(1,3): # Range 1...4 iff you have master ball `range(1,4)`
             r = self.catch_pokemon(
