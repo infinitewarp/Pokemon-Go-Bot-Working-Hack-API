@@ -56,7 +56,7 @@ class PGoApi:
         self._posf = (0,0,0)
         self.MIN_KEEP_IV = config.get("MIN_KEEP_IV", 0)
         self.KEEP_CP_OVER = config.get("KEEP_CP_OVER", 0)
-        self.RELEASE_DUPLICATES = config.get("RELEASE_DUPLICATES", 0)
+        self.RELEASE_DUPLICATES = config.get("RELEASE_DUPLICATE", 0)
         self.DUPLICATE_CP_FORGIVENESS = config.get("DUPLICATE_CP_FOREGIVENESS", 0)
         self._req_method_list = []
         self._heartbeat_number = 5
