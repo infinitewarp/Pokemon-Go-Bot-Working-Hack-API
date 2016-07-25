@@ -24,7 +24,7 @@ If your bot stops working all of a sudden and doesn't move, input your latitude 
 5. Create a google maps API key and activate it:
     1. Create it here: https://console.developers.google.com/projectselector/apis/credentials
     2. Then activate it here (select your project on the dropdown menu): https://console.developers.google.com/apis/api/directions_backend/overview?project=_
-6. Then go to the configure.json file and put in your username, password, location(don't make this ridiculous; make sure it is or close to where you signed in last), your google maps API key which you created earlier.
+6. Then copy config.json.example to config.json file and put in your username, password, location(don't make this ridiculous; make sure it is or close to where you signed in last), your google maps API key which you created earlier.
 7. Run the following line on terminal/CMD if you login into Pokemon Go with Google: `python pokebot.py -i 0` and `python pokebot.py -i 1` if you use Pokemon Trainer's Club
 8. After you run it the first time add `--cache` to the end. For example, `python pokebot.py -i 0 --cache`
 9. Many thanks to Tejado, Milaly, and the other wonderful devs that worked on this project!

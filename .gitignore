@@ -89,7 +89,8 @@ ENV/
 .ropeproject
 
 # Personal load details
-config.json
+/config.json
+accounts
 
 .DS_Store
 data_dumps/*.json
