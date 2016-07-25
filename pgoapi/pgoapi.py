@@ -272,7 +272,7 @@ class PGoApi:
                                 if pokemon['cp'] * self.DUPLICATE_CP_FORGIVENESS > last_pokemon['cp']:
                                     # release the lesser!
                                     self.log.debug("Releasing pokemon: %s", last_pokemon)
-                                    self.log.info("Releasing pokemon: %s IV: %s", self.pokemon_names[str(last_pokemon['pokemon_id'])], pokemonIVPercentage(pokemon))
+                                    self.log.info("Releasing pokemon: %s IV: %s", self.pokemon_names[str(last_pokemon['pokemon_id'])], pokemonIVPercentage(last_pokemon))
                                     self.release_pokemon(pokemon_id = last_pokemon["id"])
                                 last_pokemon = pokemon
                             else:
