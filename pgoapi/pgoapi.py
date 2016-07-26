@@ -36,6 +36,14 @@ MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POTION: 10,
                        Inventory.ITEM_BLUK_BERRY: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
                        Inventory.ITEM_REVIVE: 10}
+                       
+# Candy needed to evolve pokemon
+CANDY_NEEDED_TO_EVOLVE = {10: 11,#Caterpie
+                          16: 11,#pidgey
+                          13: 11,#Weedle
+                          19: 24,#Rattata
+                          41: 49,#Zubat
+                          }
 MIN_SIMILAR_POKEMON = 1
 INVENTORY_DICT = {Inventory.ITEM_UNKNOWN: "UNKNOWN",
                   Inventory.ITEM_POKE_BALL: "POKE_BALL",
@@ -293,9 +301,9 @@ class PGoApi:
                 pokemons = sorted(pokemons, lambda x,y: cmp(x['cp'],y['cp']),reverse=True)
                 for pokemon in pokemons[MIN_SIMILAR_POKEMON:]:
                     if 'cp' in pokemon and pokemonIVPercentage(pokemon) < self.MIN_KEEP_IV and pokemon['cp'] < self.KEEP_CP_OVER:
-                        if pokemon['pokemon_id'] == 16:
+                        if pokemon['pokemon_id'] in CANDY_NEEDED_TO_EVOLVE:
                             for inventory_item in inventory_items:
-                                if "pokemon_family" in inventory_item['inventory_item_data'] and inventory_item['inventory_item_data']['pokemon_family']['family_id'] == 16 and inventory_item['inventory_item_data']['pokemon_family']['candy'] > 11:
+                                if "pokemon_family" in inventory_item['inventory_item_data'] and inventory_item['inventory_item_data']['pokemon_family']['family_id'] == pokemon['pokemon_id'] and inventory_item['inventory_item_data']['pokemon_family']['candy'] > CANDY_NEEDED_TO_EVOLVE[pokemon['pokemon_id']]:
                                   self.log.info("Evolving pokemon: %s", self.pokemon_names[str(pokemon['pokemon_id'])])
                                   self.evolve_pokemon(pokemon_id = pokemon['id'])
                         self.log.debug("Releasing pokemon: %s", pokemon)
