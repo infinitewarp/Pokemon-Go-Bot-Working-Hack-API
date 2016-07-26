@@ -252,7 +252,7 @@ class PGoApi:
             if len(pokemons) > MIN_SIMILAR_POKEMON:
                 pokemons = sorted(pokemons, lambda x,y: cmp(x['cp'],y['cp']),reverse=True)
                 for pokemon in pokemons[MIN_SIMILAR_POKEMON:]:
-                    if 'cp' in pokemon and pokemonIVPercentage(pokemon) < self.MIN_KEEP_IV or pokemon['cp'] < self.KEEP_CP_OVER:
+                    if 'cp' in pokemon and pokemonIVPercentage(pokemon) < self.MIN_KEEP_IV and pokemon['cp'] < self.KEEP_CP_OVER:
                         if pokemon['pokemon_id'] == 16:
                             for inventory_item in inventory_items:
                                 if "pokemon_family" in inventory_item['inventory_item_data'] and inventory_item['inventory_item_data']['pokemon_family']['family_id'] == 16 and inventory_item['inventory_item_data']['pokemon_family']['candy'] > 11:
