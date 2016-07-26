@@ -263,7 +263,7 @@ class PGoApi:
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0]*len(neighbors), cell_id=neighbors).call()
 
     def attempt_catch(self,encounter_id,spawn_point_guid): #Problem here... add 4 if you have master ball
-        for i in range(1,3): # Range 1...4 iff you have master ball `range(1,4)`
+        for i in range(1,4): # Range 1...4 iff you have master ball `range(1,4)`
             r = self.catch_pokemon(
                 normalized_reticle_size= 1.950,
                 pokeball = i,
