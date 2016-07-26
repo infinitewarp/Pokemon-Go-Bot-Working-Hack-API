@@ -37,6 +37,36 @@ MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POTION: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
                        Inventory.ITEM_REVIVE: 10}
 MIN_SIMILAR_POKEMON = 1
+INVENTORY_DICT = {Inventory.ITEM_UNKNOWN: "UNKNOWN",
+                  Inventory.ITEM_POKE_BALL: "POKE_BALL",
+                  Inventory.ITEM_GREAT_BALL: "GREAT_BALL",
+                  Inventory.ITEM_ULTRA_BALL: "ULTRA_BALL",
+                  Inventory.ITEM_MASTER_BALL: "MASTER_BALL",
+                  Inventory.ITEM_POTION: "POTION",
+                  Inventory.ITEM_SUPER_POTION: "SUPER_POTION",
+                  Inventory.ITEM_HYPER_POTION: "HYPER_POTION",
+                  Inventory.ITEM_MAX_POTION: "MAX_POTION",
+                  Inventory.ITEM_REVIVE: "REVIVE",
+                  Inventory.ITEM_MAX_REVIVE: "MAX_REVIVE",
+                  Inventory.ITEM_LUCKY_EGG: "LUCKY_EGG",
+                  Inventory.ITEM_INCENSE_ORDINARY: "INCENSE_ORDINARY",
+                  Inventory.ITEM_INCENSE_SPICY: "INCENSE_SPICY",
+                  Inventory.ITEM_INCENSE_COOL: "INCENSE_COOL",
+                  Inventory.ITEM_INCENSE_FLORAL: "INCENSE_FLORAL",
+                  Inventory.ITEM_TROY_DISK: "TROY_DISK/LURE_MODULE",
+                  Inventory.ITEM_X_ATTACK: "X_ATTACK",
+                  Inventory.ITEM_X_DEFENSE: "X_DEFENSE",
+                  Inventory.ITEM_X_MIRACLE: "X_MIRACLE",
+                  Inventory.ITEM_RAZZ_BERRY: "RAZZ_BERRY",
+                  Inventory.ITEM_BLUK_BERRY: "BLUK_BERRY",
+                  Inventory.ITEM_NANAB_BERRY: "NANAB_BERRY",
+                  Inventory.ITEM_WEPAR_BERRY: "WEPAR_BERRY",
+                  Inventory.ITEM_PINAP_BERRY: "PINAP_BERRY",
+                  Inventory.ITEM_SPECIAL_CAMERA: "SPECIAL_CAMERA",
+                  Inventory.ITEM_INCUBATOR_BASIC_UNLIMITED: "INCUBATOR_BASIC_UNLIMITED",
+                  Inventory.ITEM_INCUBATOR_BASIC: "INCUBATOR_BASIC",
+                  Inventory.ITEM_POKEMON_STORAGE_UPGRADE: "POKEMON_STORAGE_UPGRADE",
+                  Inventory.ITEM_ITEM_STORAGE_UPGRADE: "ITEM_STORAGE_UPGRADE"}
 
 
 class PGoApi:
@@ -148,7 +178,7 @@ class PGoApi:
                 res['responses']['lat'] = self._posf[0]
                 res['responses']['lng'] = self._posf[1]
                 f.write(json.dumps(res['responses'], indent=2))
-            self.log.info(get_inventory_data(res, self.pokemon_names))
+            self.log.info("List of Pokemon:\n" + get_inventory_data(res, self.pokemon_names) + "\nTotal Pokemon count: " + str(get_pokemon_num(res)))
             self.log.debug(self.cleanup_inventory(res['responses']['GET_INVENTORY']['inventory_delta']['inventory_items']))
 
         self._heartbeat_number += 1
@@ -232,6 +262,18 @@ class PGoApi:
     def cleanup_inventory(self, inventory_items=None):
         if not inventory_items:
             inventory_items = self.get_inventory().call()['responses']['GET_INVENTORY']['inventory_delta']['inventory_items']
+
+        all_actual_items = [xiq['inventory_item_data']["item"] for xiq in inventory_items if "item" in xiq['inventory_item_data']]
+        all_actual_item_str = "List of items:\n"
+        all_actual_item_count = 0
+        all_actual_items = sorted([x for x in all_actual_items if "count" in x], key=lambda x: x["item_id"])
+        for xiq in all_actual_items:
+            true_item_name = INVENTORY_DICT[xiq["item_id"]]
+            all_actual_item_str += "Item_ID "+str(xiq["item_id"])+"\titem count "+str(xiq["count"])+"\t("+true_item_name+")\n"
+            all_actual_item_count += xiq["count"]
+        all_actual_item_str += "Total item count: "+str(all_actual_item_count)
+        self.log.info(all_actual_item_str)
+
         caught_pokemon = defaultdict(list)
         for inventory_item in inventory_items:
             if "pokemon_data" in  inventory_item['inventory_item_data']:
