@@ -139,12 +139,15 @@ class PGoApi:
 
         if 'GET_PLAYER' in res['responses']:
             player_data = res['responses'].get('GET_PLAYER', {}).get('player_data', {})
-            with open("accounts/%s.json" % self.config['username'], "r") as f:
-                file = f.read()
-                json_file = json.loads(file)
-            inventory_items = json_file.get('GET_INVENTORY', {}).get('inventory_delta', {}).get('inventory_items', [])
-            inventory_items_dict_list = map(lambda x: x.get('inventory_item_data', {}), inventory_items)
-            player_stats = filter(lambda x: 'player_stats' in x, inventory_items_dict_list)[0].get('player_stats', {})
+            if os.path.isfile("accounts/%s.json" % self.config['username']):
+                with open("accounts/%s.json" % self.config['username'], "r") as f:
+                    file = f.read()
+                    json_file = json.loads(file)
+                inventory_items = json_file.get('GET_INVENTORY', {}).get('inventory_delta', {}).get('inventory_items', [])
+                inventory_items_dict_list = map(lambda x: x.get('inventory_item_data', {}), inventory_items)
+                player_stats = filter(lambda x: 'player_stats' in x, inventory_items_dict_list)[0].get('player_stats', {})
+            else:
+                player_stats = {}
             currencies = player_data.get('currencies', [])
             currency_data = ",".join(map(lambda x: "{0}: {1}".format(x.get('name', 'NA'), x.get('amount', 'NA')), currencies))
             self.log.info("Username: %s, Lvl: %s, XP: %s/%s, Currencies: %s", player_data.get('username', 'NA'), player_stats.get('level', 'NA'), player_stats.get('experience', 'NA'), player_stats.get('next_level_xp', 'NA'), currency_data)
@@ -249,7 +252,7 @@ class PGoApi:
             if len(pokemons) > MIN_SIMILAR_POKEMON:
                 pokemons = sorted(pokemons, lambda x,y: cmp(x['cp'],y['cp']),reverse=True)
                 for pokemon in pokemons[MIN_SIMILAR_POKEMON:]:
-                    if 'cp' in pokemon and pokemonIVPercentage(pokemon) < self.MIN_KEEP_IV and pokemon['cp'] < self.KEEP_CP_OVER:
+                    if 'cp' in pokemon and pokemonIVPercentage(pokemon) < self.MIN_KEEP_IV or pokemon['cp'] < self.KEEP_CP_OVER:
                         if pokemon['pokemon_id'] == 16:
                             for inventory_item in inventory_items:
                                 if "pokemon_family" in inventory_item['inventory_item_data'] and inventory_item['inventory_item_data']['pokemon_family']['family_id'] == 16 and inventory_item['inventory_item_data']['pokemon_family']['candy'] > 11:
