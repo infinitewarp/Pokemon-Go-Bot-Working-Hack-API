@@ -27,12 +27,16 @@ from collections import defaultdict
 import os.path
 
 logger = logging.getLogger(__name__)
-BAD_ITEM_IDS = [101,102,701,702,703] #Potion, Super Potion, RazzBerry, BlukBerry, Revive
+BAD_ITEM_IDS = [1,2,3,101,102,103,701,702,703] #Pokeball, Greatball, Ultraball, Potion, Super Potion, Hyper Potion, RazzBerry, BlukBerry, Revive
 
 # Minimum amount of the bad items that you should have ... Modify based on your needs ... like if you need to battle a gym?
-MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POTION: 10,
-                       Inventory.ITEM_SUPER_POTION: 10,
-                       Inventory.ITEM_RAZZ_BERRY: 10,
+MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 50,
+                       Inventory.ITEM_GREAT_BALL: 50,
+                       Inventory.ITEM_ULTRA_BALL: 50,
+                       Inventory.ITEM_POTION: 5,
+                       Inventory.ITEM_SUPER_POTION: 5,
+                       Inventory.ITEM_HYPER_POTION: 50,
+                       Inventory.ITEM_RAZZ_BERRY: 25,
                        Inventory.ITEM_BLUK_BERRY: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
                        Inventory.ITEM_REVIVE: 10}
