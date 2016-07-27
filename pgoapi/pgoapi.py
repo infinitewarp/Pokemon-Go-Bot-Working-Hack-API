@@ -46,10 +46,11 @@ MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 50,
                        Inventory.ITEM_POTION: 5,
                        Inventory.ITEM_SUPER_POTION: 5,
                        Inventory.ITEM_HYPER_POTION: 50,
+                       Inventory.ITEM_MAX_POTION: 50,
                        Inventory.ITEM_RAZZ_BERRY: 25,
                        Inventory.ITEM_BLUK_BERRY: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
-                       Inventory.ITEM_REVIVE: 10}
+                       Inventory.ITEM_REVIVE: 15}
 
 # Candy needed to evolve pokemon
 CANDY_NEEDED_TO_EVOLVE = {10: 11,  # Caterpie
@@ -278,8 +279,8 @@ class PGoApi:
         neighbors = get_neighbors(self._posf)
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0] * len(neighbors), cell_id=neighbors).call()
 
-    def attempt_catch(self, encounter_id, spawn_point_guid): # Problem here... add 4 if you have master ball
-        for i in range(1, 4): # Range 1...4 iff you have master ball `range(1,4)`
+    def attempt_catch(self, encounter_id, spawn_point_guid): # Problem here... add 5 if you have master ball
+        for i in range(1, 4): # Range 1...5 iff you have master ball `range(1, 5)`
             r = self.catch_pokemon(
                 normalized_reticle_size=1.950,
                 pokeball=i,
