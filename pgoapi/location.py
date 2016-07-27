@@ -1,6 +1,6 @@
 # Do NOT use this bot while signed into your acccount with your phone -TomTheBotter
 
-#import logging
+# import logging
 from geopy.geocoders import GoogleV3
 from gmaps.errors import GmapException
 from gmaps.directions import Directions
