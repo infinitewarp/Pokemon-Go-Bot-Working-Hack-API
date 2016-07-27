@@ -14,7 +14,7 @@ import globalvars #Global variables module. Used for tracking Gmaps API keys to 
 g = pyproj.Geod(ellps='WGS84')
 geolocator = GoogleV3()
 
-log = logging.getLogger(__name__)
+#log = logging.getLogger(__name__)
 
 def getLocation(search):
     loc = geolocator.geocode(search)
