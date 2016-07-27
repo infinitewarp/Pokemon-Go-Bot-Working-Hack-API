@@ -19,24 +19,24 @@ def getLocation(search):
     loc = geolocator.geocode(search)
     return (loc.latitude, loc.longitude, loc.altitude)
 
-def get_route(start,end, use_google = False, GMAPS_API_KEY = None):
-    if GMAPS_API_KEY is None:
-        GMAPS_API_KEY = [""]
+def get_route(start,end, use_google = False, gmaps_api_key = None):
+    if gmaps_api_key is None:
+        gmaps_api_key = [""]
     origin = (start[0], start[1])
     destination = (end[0], end[1])
     if use_google:
         #try the Gmaps API with all the keys from the array in config until all return errors in a single get_route call
         counter = 0 #counts the nunber of API keys tried in a single get_route call
-        while counter < len(GMAPS_API_KEY): #break out of the loop if all API keys are giving errors
+        while counter < len(gmaps_api_key): #break out of the loop if all API keys are giving errors
             try:
-                directions_service = Directions(api_key=GMAPS_API_KEY[globalvars.apikeyindex])
+                directions_service = Directions(api_key=gmaps_api_key[globalvars.apikeyindex])
                 d = directions_service.directions(origin, destination, mode="walking",units="metric")
                 steps = d[0]['legs'][0]['steps']
                 return [(step['end_location']["lat"],step['end_location']["lng"]) for step in steps]
             except GmapException as err:
                 log.error('Gmaps API error with key index %s trying next key', globalvars.apikeyindex)
                 counter += 1
-                if globalvars.apikeyindex == len(GMAPS_API_KEY) - 1: #if we are at the end of the API key list try the first one again
+                if globalvars.apikeyindex == len(gmaps_api_key) - 1: #if we are at the end of the API key list try the first one again
                     globalvars.apikeyindex = 0
                 else:
                     globalvars.apikeyindex += 1
