@@ -12,7 +12,7 @@
         "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100,
         "RETURN_START_INTERVAL": 20,
-        "MAX_BALL_TYPE": 2 # 1 for pokeball only, 2 for greatball, 3 for ultraball, 4 for masterball
+        "MAX_BALL_TYPE": 2
     },
     {  "auth_service": "ptc",
         "username": "USERNAME_HERE",
@@ -26,6 +26,6 @@
         "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100,
         "RETURN_START_INTERVAL": 20,
-        "MAX_BALL_TYPE": 2 # 1 for pokeball only, 2 for greatball, 3 for ultraball, 4 for masterball
+        "MAX_BALL_TYPE": 2
     }
     ]}
