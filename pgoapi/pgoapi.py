@@ -118,6 +118,7 @@ class PGoApi:
         self._req_method_list = []
         self._heartbeat_number = 5
         self.pokemon_names = pokemon_names
+        self.pokeballs = [50,50,50,50] #pokeball counts. set to 50 to avoid possibility of triggering farm mode at startup
 
     def call(self):
         if not self._req_method_list:
@@ -309,6 +310,8 @@ class PGoApi:
         all_actual_item_count = 0
         all_actual_items = sorted([x for x in all_actual_items if "count" in x], key=lambda x: x["item_id"])
         for xiq in all_actual_items:
+            if 1 <= xiq["item_id"] <= 4: #save counts of pokeballs
+                self.pokeballs[xiq["item_id"]] = xiq["count"]
             true_item_name = INVENTORY_DICT[xiq["item_id"]]
             all_actual_item_str += "Item_ID " + str(xiq["item_id"]) + "\titem count " + str(xiq["count"]) + "\t(" + true_item_name + ")\n"
             all_actual_item_count += xiq["count"]
@@ -499,9 +502,13 @@ class PGoApi:
         while True:
             self.heartbeat()
             sleep(1) # If you want to make it faster, delete this line... would not recommend though
-            while self.catch_near_pokemon():
-                sleep(4) # If you want to make it faster, delete this line... would not recommend though
-                pass
+            #make sure we always have at least 10 pokeballs, 5 great balls, and 5 ultra balls
+            if self.pokeballs[0] > 9 and self.pokeballs[1] > 4 and self.pokeballs[2] > 4:
+                while self.catch_near_pokemon():
+                    sleep(4) # If you want to make it faster, delete this line... would not recommend though
+                    pass
+            else:
+                self.log.info("Less than 10 Poke Balls or 5 Great/Ultra Balls: Entering pokestops only")
             self.spin_near_fort()
 
     @staticmethod
