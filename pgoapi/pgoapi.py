@@ -508,7 +508,7 @@ class PGoApi:
                     sleep(4) # If you want to make it faster, delete this line... would not recommend though
                     pass
             else:
-                self.log.info("Less than 10 Pokeballs: Entering pokestops only")
+                self.log.info("Less than 10 Poke Balls or 5 Great/Ultra Balls: Entering pokestops only")
             self.spin_near_fort()
 
     @staticmethod
