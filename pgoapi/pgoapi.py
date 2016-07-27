@@ -426,7 +426,7 @@ class PGoApi:
                     sleep(2) # If you want to make it faster, delete this line... would not recommend though
                     return catch_attempt
                 elif capture_status == 2:
-                    self.log.info("Pokemon %s is too wild", self.pokemon_names[str(resp['pokemon_data']['pokemon_id'])])
+                    self.log.info("Pokemon %s is too wild", self.pokemon_names[str(pokemon['pokemon_id'])])
                     if self._pokeball_type < self.MAX_BALL_TYPE:
                         self._pokeball_type += 1
                 elif capture_status != 2:
