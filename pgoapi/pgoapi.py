@@ -113,7 +113,7 @@ class PGoApi:
         self.KEEP_CP_OVER = config.get("KEEP_CP_OVER", 0)
         self.RELEASE_DUPLICATES = config.get("RELEASE_DUPLICATE", 0)
         self.DUPLICATE_CP_FORGIVENESS = config.get("DUPLICATE_CP_FOREGIVENESS", 0)
-        self.MAX_BALL_TYPE = config.get("MAX_BALL_TYPE", 2)
+        self.MAX_BALL_TYPE = config.get("MAX_BALL_TYPE", 3) # for masterballchange to 4
         self._req_method_list = []
         self._heartbeat_number = 5
         self.pokemon_names = pokemon_names
