@@ -40,17 +40,17 @@ BAD_ITEM_IDS = [
 ]
 
 # Minimum amount of the bad items that you should have ... Modify based on your needs ... like if you need to battle a gym?
-MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 50,
-                       Inventory.ITEM_GREAT_BALL: 50,
-                       Inventory.ITEM_ULTRA_BALL: 50,
+MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 85,
+                       Inventory.ITEM_GREAT_BALL: 85,
+                       Inventory.ITEM_ULTRA_BALL: 85,
                        Inventory.ITEM_POTION: 5,
                        Inventory.ITEM_SUPER_POTION: 5,
-                       Inventory.ITEM_HYPER_POTION: 50,
-                       Inventory.ITEM_MAX_POTION: 50,
-                       Inventory.ITEM_RAZZ_BERRY: 25,
+                       Inventory.ITEM_HYPER_POTION: 5,
+                       Inventory.ITEM_MAX_POTION: 5,
+                       Inventory.ITEM_RAZZ_BERRY: 50,
                        Inventory.ITEM_BLUK_BERRY: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
-                       Inventory.ITEM_REVIVE: 15}
+                       Inventory.ITEM_REVIVE: 5}
 
 # Candy needed to evolve pokemon
 CANDY_NEEDED_TO_EVOLVE = {10: 11,  # Caterpie
@@ -118,6 +118,7 @@ class PGoApi:
         self._req_method_list = []
         self._heartbeat_number = 5
         self.pokemon_names = pokemon_names
+        self.pokeballs = [0,0,0,0] #pokeball counts. set to 0 to ensure that even if the bot is started with 0 pokeballs it will continue without error
 
     def call(self):
         if not self._req_method_list:
@@ -234,8 +235,10 @@ class PGoApi:
                 self.heartbeat()
                 self.log.info("Sleeping before next heartbeat")
                 sleep(2) # If you want to make it faster, delete this line... would not recommend though
-                while self.catch_near_pokemon():
-                    sleep(1) # If you want to make it faster, delete this line... would not recommend though
+                #make sure we always have at least 10 pokeballs, 5 great balls, and 5 ultra balls
+                if self.pokeballs[1] > 9 and self.pokeballs[2] > 4 and self.pokeballs[3] > 4:
+                    while self.catch_near_pokemon():
+                        sleep(1) # If you want to make it faster, delete this line... would not recommend though
 
     def spin_near_fort(self):
         map_cells = self.nearby_map_objects().get('responses', {}).get('GET_MAP_OBJECTS', {}).get('map_cells', {})
@@ -259,7 +262,8 @@ class PGoApi:
                 position = self._posf
                 resp = self.disk_encounter(encounter_id=encounter_id, fort_id=fort_id, player_latitude=position[0], player_longitude=position[1]).call()['responses']['DISK_ENCOUNTER']
                 self.log.debug('Encounter response is: %s', resp)
-                self.disk_encounter_pokemon(fort['lure_info'])
+                if self.pokeballs[1] > 9 and self.pokeballs[2] > 4 and self.pokeballs[3] > 4:
+                    self.disk_encounter_pokemon(fort['lure_info'])
             return True
         else:
             self.log.error("No fort to walk to!")
@@ -309,6 +313,8 @@ class PGoApi:
         all_actual_item_count = 0
         all_actual_items = sorted([x for x in all_actual_items if "count" in x], key=lambda x: x["item_id"])
         for xiq in all_actual_items:
+            if 1 <= xiq["item_id"] <= 4: #save counts of pokeballs
+                self.pokeballs[xiq["item_id"]] = xiq["count"]
             true_item_name = INVENTORY_DICT[xiq["item_id"]]
             all_actual_item_str += "Item_ID " + str(xiq["item_id"]) + "\titem count " + str(xiq["count"]) + "\t(" + true_item_name + ")\n"
             all_actual_item_count += xiq["count"]
@@ -499,9 +505,13 @@ class PGoApi:
         while True:
             self.heartbeat()
             sleep(1) # If you want to make it faster, delete this line... would not recommend though
-            while self.catch_near_pokemon():
-                sleep(4) # If you want to make it faster, delete this line... would not recommend though
-                pass
+            #make sure we always have at least 10 pokeballs, 5 great balls, and 5 ultra balls
+            if self.pokeballs[1] > 9 and self.pokeballs[2] > 4 and self.pokeballs[3] > 4:
+                while self.catch_near_pokemon():
+                    sleep(4) # If you want to make it faster, delete this line... would not recommend though
+                    pass
+            else:
+                self.log.info("Less than 10 Poke Balls or 5 Great/Ultra Balls: Entering pokestops only")
             self.spin_near_fort()
 
     @staticmethod
