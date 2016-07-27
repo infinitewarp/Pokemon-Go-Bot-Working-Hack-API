@@ -20,6 +20,8 @@ from pgoapi import PGoApi
 from geopy.geocoders import GoogleV3
 # from s2sphere import CellId, LatLng
 
+import pgoapi.globalvars #import global variables module currently used for tracking the used Gmaps API keys to prevent extra requests to bad keys
+
 log = logging.getLogger(__name__)
 
 
