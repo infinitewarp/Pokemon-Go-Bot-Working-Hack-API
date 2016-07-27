@@ -281,7 +281,7 @@ class PGoApi:
 
     def nearby_map_objects(self):
         position = self.get_position()
-        neighbors = getNeighbors(self._posf)
+        neighbors = get_neighbors(self._posf)
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0]*len(neighbors), cell_id=neighbors).call()
     
     def attempt_catch(self,encounter_id,spawn_point_guid,ball_type):

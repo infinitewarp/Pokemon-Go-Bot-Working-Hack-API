@@ -1,6 +1,6 @@
 # Do NOT use this bot while signed into your acccount with your phone -TomTheBotter
 
-# import logging
+#import logging
 from geopy.geocoders import GoogleV3
 from gmaps.errors import GmapException
 from gmaps.directions import Directions
@@ -35,13 +35,13 @@ def get_route(start,end, use_google = False, gmaps_api_key = None):
                 steps = d[0]['legs'][0]['steps']
                 return [(step['end_location']["lat"],step['end_location']["lng"]) for step in steps]
             except GmapException as err:
-                log.error('Gmaps API error with key index %s trying next key', globalvars.apikeyindex)
+                #log.error('Gmaps API error with key index %s trying next key', globalvars.apikeyindex)
                 counter += 1
                 if globalvars.apikeyindex == len(gmaps_api_key) - 1: #if we are at the end of the API key list try the first one again
                     globalvars.apikeyindex = 0
                 else:
                     globalvars.apikeyindex += 1
-        log.error('All Gmaps API Keys are returning an error: Raising exception')
+        #log.error('All Gmaps API Keys are returning an error: Raising exception')
         raise
     else:
         return [destination]
