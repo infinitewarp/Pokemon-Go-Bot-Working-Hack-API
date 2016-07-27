@@ -40,17 +40,17 @@ BAD_ITEM_IDS = [
 ]
 
 # Minimum amount of the bad items that you should have ... Modify based on your needs ... like if you need to battle a gym?
-MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 85,
-                       Inventory.ITEM_GREAT_BALL: 85,
-                       Inventory.ITEM_ULTRA_BALL: 85,
+MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 15,
+                       Inventory.ITEM_GREAT_BALL: 25,
+                       Inventory.ITEM_ULTRA_BALL: 95,
                        Inventory.ITEM_POTION: 5,
                        Inventory.ITEM_SUPER_POTION: 5,
-                       Inventory.ITEM_HYPER_POTION: 5,
-                       Inventory.ITEM_MAX_POTION: 5,
-                       Inventory.ITEM_RAZZ_BERRY: 50,
+                       Inventory.ITEM_HYPER_POTION: 30,
+                       Inventory.ITEM_MAX_POTION: 60,
+                       Inventory.ITEM_RAZZ_BERRY: 20,
                        Inventory.ITEM_BLUK_BERRY: 10,
                        Inventory.ITEM_NANAB_BERRY: 10,
-                       Inventory.ITEM_REVIVE: 5}
+                       Inventory.ITEM_REVIVE: 25}
 
 # Candy needed to evolve pokemon
 CANDY_NEEDED_TO_EVOLVE = {10: 11,  # Caterpie
@@ -384,7 +384,7 @@ class PGoApi:
             resp = self.disk_encounter(encounter_id=encounter_id, fort_id=fort_id, player_latitude=position[0], player_longitude=position[1]).call()['responses']['DISK_ENCOUNTER']
             if resp['result'] == 1:
                 capture_status = -1
-                while capture_status != 0 and capture_status != 3:
+                while capture_status != 0 and capture_status != 3 and self.pokeballs[self._pokeball_type] > 1:
                     catch_attempt = self.attempt_catch(encounter_id,fort_id,self._pokeball_type)
                     capture_status = catch_attempt['status']
                     if capture_status == 1:
@@ -401,7 +401,8 @@ class PGoApi:
                         self.log.debug("Failed Catch: : %s", catch_attempt)
                         self.log.info("Failed to catch Pokemon:  %s", self.pokemon_names[str(resp['pokemon_data']['pokemon_id'])])
                         self._pokeball_type = 1
-                        return False
+                    return False
+                    self._pokeball_type += 1
                     sleep(2) # If you want to make it faster, delete this line... would not recommend though
         except Exception as e:
             self.log.error("Error in disk encounter %s", e)
@@ -422,7 +423,7 @@ class PGoApi:
         self.log.debug("Started Encounter: %s", encounter)
         if encounter['status'] == 1:
             capture_status = -1
-            while capture_status != 0 and capture_status != 3:
+            while capture_status != 0 and capture_status != 3 and self.pokeballs[self._pokeball_type] > 1:
                 catch_attempt = self.attempt_catch(encounter_id,spawn_point_id,self._pokeball_type)
                 capture_status = catch_attempt['status']
                 if capture_status == 1:
@@ -439,6 +440,7 @@ class PGoApi:
                     self.log.debug("Failed Catch: : %s", catch_attempt)
                     self.log.info("Failed to Catch Pokemon:  %s", self.pokemon_names[str(pokemon['pokemon_id'])])
                     self._pokeball_type = 1
+                self._pokeball_type += 1
                 return False
                 sleep(2) # If you want to make it faster, delete this line... would not recommend though
         self._pokeball_type = 1
@@ -505,13 +507,13 @@ class PGoApi:
         while True:
             self.heartbeat()
             sleep(1) # If you want to make it faster, delete this line... would not recommend though
-            #make sure we always have at least 10 pokeballs, 5 great balls, and 5 ultra balls
-            if self.pokeballs[1] > 9 and self.pokeballs[2] > 4 and self.pokeballs[3] > 4:
+            if self.pokeballs[self._pokeball_type] > 1:#make sure we always have at least 10 pokeballs, 5 great balls, and 5 ultra balls
                 while self.catch_near_pokemon():
                     sleep(4) # If you want to make it faster, delete this line... would not recommend though
                     pass
             else:
-                self.log.info("Less than 10 Poke Balls or 5 Great/Ultra Balls: Entering pokestops only")
+                self._pokeball_type += 1
+            self.log.info("Less than 1 Poke Balls: Entering pokestops only")
             self.spin_near_fort()
 
     @staticmethod
