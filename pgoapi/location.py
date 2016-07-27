@@ -1,9 +1,9 @@
 # Do NOT use this bot while signed into your acccount with your phone -TomTheBotter
 
-import logging
+# import logging
 from geopy.geocoders import GoogleV3
-from gmaps.directions import *
-from gmaps.errors import *
+from gmaps.errors import GmapException
+from gmaps.directions import Directions
 import s2sphere
 from geopy.distance import VincentyDistance, vincenty # Vincenty...
 import pyproj
@@ -13,6 +13,7 @@ import globalvars #Global variables module. Used for tracking Gmaps API keys to 
 
 g = pyproj.Geod(ellps='WGS84')
 geolocator = GoogleV3()
+
 log = logging.getLogger(__name__)
 
 def getLocation(search):
@@ -45,8 +46,9 @@ def get_route(start,end, use_google = False, gmaps_api_key = None):
     else:
         return [destination]
 
+
 # step_size is how many meters we want; change that in config.json
-def get_increments(start,end,step_size=200):
+def get_increments(start, end, step_size=200):
     g = pyproj.Geod(ellps='WGS84')
     (startlat, startlong, _) = start
     (endlat, endlong) = end
@@ -55,20 +57,20 @@ def get_increments(start,end,step_size=200):
     lonlats = g.npts(startlong, startlat, endlong, endlat,
                      1 + int(dist / step_size))
     lonlats.append((endlong, endlat))
-    return [(l[1],l[0],0) for l in lonlats]
+    return [(l[1], l[0], 0) for l in lonlats]
 
 
+def distance_in_meters(p1, p2):
+    return vincenty(p1, p2).meters
 
-
-def distance_in_meters(p1,p2):
-    return vincenty(p1,p2).meters
 
 def filtered_forts(origin, forts):
-    forts = [(fort, distance_in_meters(origin,(fort['latitude'], fort['longitude']))) for fort in forts if fort.get('type',None) == 1 and ("enabled" in fort or lure_info in fort) and fort.get('cooldown_complete_timestamp_ms',-1) < time()*1000]
-    sorted_forts = sorted(forts, lambda x,y : cmp(x[1],y[1]))
+    forts = [(fort, distance_in_meters(origin, (fort['latitude'], fort['longitude']))) for fort in forts if fort.get('type', None) == 1 and ("enabled" in fort or "lure_info" in fort) and fort.get('cooldown_complete_timestamp_ms', -1) < time() * 1000]
+    sorted_forts = sorted(forts, lambda x, y: cmp(x[1], y[1]))
     return [x[0] for x in sorted_forts]
 
-def getNeighbors(loc, level=15, spread=700):
+
+def get_neighbors(loc, level=15, spread=700):
     distance = VincentyDistance(meters=spread)
     center = (loc[0], loc[1], 0)
     p1 = distance.destination(point=center, bearing=45)

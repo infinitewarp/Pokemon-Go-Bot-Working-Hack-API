@@ -30,10 +30,11 @@ import subprocess
 from importlib import import_module
 
 import requests
+from google.protobuf.message import DecodeError
+
 from pgoapi.protos.POGOProtos.Networking.Envelopes_pb2 import RequestEnvelope
 from pgoapi.protos.POGOProtos.Networking.Envelopes_pb2 import ResponseEnvelope
 from pgoapi.protos.POGOProtos.Networking.Requests_pb2 import RequestType
-
 from pgoapi.exceptions import NotLoggedInException, ServerBusyOrOfflineException
 from pgoapi.protobuf_to_dict import protobuf_to_dict
 from pgoapi.utilities import to_camel_case
@@ -75,7 +76,7 @@ class RpcApi:
         request_proto_serialized = request_proto_plain.SerializeToString()
         try:
             http_response = self._session.post(endpoint, data=request_proto_serialized)
-        except requests.exceptions.ConnectionError as e:
+        except requests.exceptions.ConnectionError:
             raise ServerBusyOrOfflineException
 
         return http_response
@@ -150,7 +151,7 @@ class RpcApi:
                     else:
                         try:
                             setattr(subrequest_extension, key, value)
-                        except Exception as e:
+                        except Exception:
                             try:
                                 self.log.debug("%s -> %s", key, value)
                                 r = getattr(subrequest_extension, key)
@@ -186,7 +187,7 @@ class RpcApi:
         response_proto = ResponseEnvelope()
         try:
             response_proto.ParseFromString(response_raw.content)
-        except google.protobuf.message.DecodeError as e:
+        except DecodeError as e:
             self.log.warning('Could not parse response: %s', str(e))
             return False
 
@@ -230,7 +231,7 @@ class RpcApi:
             subresponse_return = None
             try:
                 subresponse_extension = self.get_class(proto_classname)()
-            except Exception as e:
+            except Exception:
                 subresponse_extension = None
                 error = 'Protobuf definition for {} not found'.format(proto_classname)
                 subresponse_return = error
