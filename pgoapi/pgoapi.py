@@ -109,11 +109,12 @@ class PGoApi:
         self._api_endpoint = None
         self.config = config
         self.set_position(*start_pos)
+        self._pokeball_type = 1
         self.MIN_KEEP_IV = config.get("MIN_KEEP_IV", 0)
         self.KEEP_CP_OVER = config.get("KEEP_CP_OVER", 0)
         self.RELEASE_DUPLICATES = config.get("RELEASE_DUPLICATE", 0)
         self.DUPLICATE_CP_FORGIVENESS = config.get("DUPLICATE_CP_FOREGIVENESS", 0)
-        self.MAX_BALL_TYPE = config.get("MAX_BALL_TYPE", 3) # for masterballchange to 4
+        self.MAX_BALL_TYPE = config.get("MAX_BALL_TYPE", 0)
         self._req_method_list = []
         self._heartbeat_number = 5
         self.pokemon_names = pokemon_names
@@ -281,7 +282,7 @@ class PGoApi:
 
     def nearby_map_objects(self):
         position = self.get_position()
-        neighbors = getNeighbors(self._posf)
+        neighbors = get_neighbors(self._posf)
         return self.get_map_objects(latitude=position[0], longitude=position[1], since_timestamp_ms=[0]*len(neighbors), cell_id=neighbors).call()
     
     def attempt_catch(self,encounter_id,spawn_point_guid,ball_type):
