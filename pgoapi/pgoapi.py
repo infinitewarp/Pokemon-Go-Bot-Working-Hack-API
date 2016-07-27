@@ -231,7 +231,7 @@ class PGoApi:
                     sleep(1) # If you want to make it faster, delete this line... would not recommend though
 
     def spin_near_fort(self):
-        map_cells = self.nearby_map_objects()['responses']['GET_MAP_OBJECTS']['map_cells']
+        map_cells = self.nearby_map_objects().get('responses', {}).get('GET_MAP_OBJECTS', {}).get('map_cells', {})
         forts = PGoApi.flatmap(lambda c: c.get('forts', []), map_cells)
         if self._start_pos and self._walk_count % self.config.get("RETURN_START_INTERVAL") == 0:
             destinations = filtered_forts(self._start_pos, forts)
@@ -259,7 +259,7 @@ class PGoApi:
             return False
 
     def catch_near_pokemon(self):
-        map_cells = self.nearby_map_objects()['responses']['GET_MAP_OBJECTS']['map_cells']
+        map_cells = self.nearby_map_objects().get('responses', {}).get('GET_MAP_OBJECTS', {}).get('map_cells', {})
         pokemons = PGoApi.flatmap(lambda c: c.get('catchable_pokemons', []), map_cells)
 
         # catch first pokemon:
