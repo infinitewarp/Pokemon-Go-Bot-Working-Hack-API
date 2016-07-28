@@ -12,7 +12,20 @@
         "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100,
         "RETURN_START_INTERVAL": 20,
-        "MAX_BALL_TYPE": 2
+        "MAX_BALL_TYPE": 2,
+        "MIN_ITEM_COUNTS": {
+            "ITEM_POKE_BALL": 15,
+            "ITEM_GREAT_BALL": 25,
+            "ITEM_ULTRA_BALL": 95,
+            "ITEM_POTION": 5,
+            "ITEM_SUPER_POTION": 5,
+            "ITEM_HYPER_POTION": 30,
+            "ITEM_MAX_POTION": 60,
+            "ITEM_RAZZ_BERRY": 20,
+            "ITEM_BLUK_BERRY": 10,
+            "ITEM_NANAB_BERRY": 10,
+            "ITEM_REVIVE": 25
+        }
     },
     {  "auth_service": "ptc",
         "username": "USERNAME_HERE",
@@ -26,6 +39,19 @@
         "DUPLICATE_CP_FOREGIVENESS": 0.90,
         "STEP_SIZE": 100,
         "RETURN_START_INTERVAL": 20,
-        "MAX_BALL_TYPE": 2
+        "MAX_BALL_TYPE": 2,
+        "MIN_ITEM_COUNTS": {
+            "ITEM_POKE_BALL": 15,
+            "ITEM_GREAT_BALL": 25,
+            "ITEM_ULTRA_BALL": 95,
+            "ITEM_POTION": 5,
+            "ITEM_SUPER_POTION": 5,
+            "ITEM_HYPER_POTION": 30,
+            "ITEM_MAX_POTION": 60,
+            "ITEM_RAZZ_BERRY": 20,
+            "ITEM_BLUK_BERRY": 10,
+            "ITEM_NANAB_BERRY": 10,
+            "ITEM_REVIVE": 25
+        }
     }
     ]}

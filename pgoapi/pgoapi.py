@@ -27,30 +27,6 @@ from collections import defaultdict
 import os.path
 
 logger = logging.getLogger(__name__)
-BAD_ITEM_IDS = [
-    1,  # Pokeball
-    2,  # Greatball
-    3,  # Ultraball
-    101,  # Potion
-    102,  # Super Potion
-    103,  # Hyper Potion
-    701,  # RazzBerry
-    702,  # BlukBerry
-    703,  # Revive
-]
-
-# Minimum amount of the bad items that you should have ... Modify based on your needs ... like if you need to battle a gym?
-MIN_BAD_ITEM_COUNTS = {Inventory.ITEM_POKE_BALL: 15,
-                       Inventory.ITEM_GREAT_BALL: 25,
-                       Inventory.ITEM_ULTRA_BALL: 95,
-                       Inventory.ITEM_POTION: 5,
-                       Inventory.ITEM_SUPER_POTION: 5,
-                       Inventory.ITEM_HYPER_POTION: 30,
-                       Inventory.ITEM_MAX_POTION: 60,
-                       Inventory.ITEM_RAZZ_BERRY: 20,
-                       Inventory.ITEM_BLUK_BERRY: 10,
-                       Inventory.ITEM_NANAB_BERRY: 10,
-                       Inventory.ITEM_REVIVE: 25}
 
 # Candy needed to evolve pokemon
 CANDY_NEEDED_TO_EVOLVE = {10: 11,  # Caterpie
@@ -119,6 +95,9 @@ class PGoApi:
         self._heartbeat_number = 5
         self.pokemon_names = pokemon_names
         self.pokeballs = [0, 0, 0, 0] # pokeball counts. set to 0 to ensure that even if the bot is started with 0 pokeballs it will continue without error
+        self.min_item_counts = dict(
+            ((getattr(Inventory, key), value) for key, value in config.get('MIN_ITEM_COUNTS', {}).iteritems())
+        )
 
     def call(self):
         if not self._req_method_list:
@@ -330,8 +309,8 @@ class PGoApi:
                     caught_pokemon[pokemon["pokemon_id"]].append(pokemon)
             elif "item" in inventory_item['inventory_item_data']:
                 item = inventory_item['inventory_item_data']['item']
-                if item['item_id'] in MIN_BAD_ITEM_COUNTS and "count" in item and item['count'] > MIN_BAD_ITEM_COUNTS[item['item_id']]:
-                    recycle_count = item['count'] - MIN_BAD_ITEM_COUNTS[item['item_id']]
+                if item['item_id'] in self.min_item_counts and "count" in item and item['count'] > self.min_item_counts[item['item_id']]:
+                    recycle_count = item['count'] - self.min_item_counts[item['item_id']]
                     self.log.info("Recycling Item_ID {0}, item count {1}".format(item['item_id'], recycle_count))
                     self.recycle_inventory_item(item_id=item['item_id'], count=recycle_count)
 
