@@ -9,39 +9,41 @@ from geopy.distance import VincentyDistance, vincenty # Vincenty...
 import pyproj
 from time import time
 
-import globalvars #Global variables module. Used for tracking Gmaps API keys to prevent continuously requesting a bad key.
+import globalvars # Global variables module. Used for tracking Gmaps API keys to prevent continuously requesting a bad key.
 
 g = pyproj.Geod(ellps='WGS84')
 geolocator = GoogleV3()
 
-#log = logging.getLogger(__name__)
+# log = logging.getLogger(__name__)
 
-def getLocation(search):
+
+def get_location(search):
     loc = geolocator.geocode(search)
     return (loc.latitude, loc.longitude, loc.altitude)
 
-def get_route(start,end, use_google = False, gmaps_api_key = None):
+
+def get_route(start, end, use_google=False, gmaps_api_key=None):
     if gmaps_api_key is None:
         gmaps_api_key = [""]
     origin = (start[0], start[1])
     destination = (end[0], end[1])
     if use_google:
-        #try the Gmaps API with all the keys from the array in config until all return errors in a single get_route call
-        counter = 0 #counts the nunber of API keys tried in a single get_route call
-        while counter < len(gmaps_api_key): #break out of the loop if all API keys are giving errors
+        # try the Gmaps API with all the keys from the array in config until all return errors in a single get_route call
+        counter = 0 # counts the nunber of API keys tried in a single get_route call
+        while counter < len(gmaps_api_key): # break out of the loop if all API keys are giving errors
             try:
                 directions_service = Directions(api_key=gmaps_api_key[globalvars.apikeyindex])
-                d = directions_service.directions(origin, destination, mode="walking",units="metric")
+                d = directions_service.directions(origin, destination, mode="walking", units="metric")
                 steps = d[0]['legs'][0]['steps']
-                return [(step['end_location']["lat"],step['end_location']["lng"]) for step in steps]
-            except GmapException as err:
-                #log.error('Gmaps API error with key index %s trying next key', globalvars.apikeyindex)
+                return [(step['end_location']["lat"], step['end_location']["lng"]) for step in steps]
+            except GmapException:
+                # log.error('Gmaps API error with key index %s trying next key', globalvars.apikeyindex)
                 counter += 1
-                if globalvars.apikeyindex == len(gmaps_api_key) - 1: #if we are at the end of the API key list try the first one again
+                if globalvars.apikeyindex == len(gmaps_api_key) - 1: # if we are at the end of the API key list try the first one again
                     globalvars.apikeyindex = 0
                 else:
                     globalvars.apikeyindex += 1
-        #log.error('All Gmaps API Keys are returning an error: Raising exception')
+        # log.error('All Gmaps API Keys are returning an error: Raising exception')
         raise
     else:
         return [destination]
